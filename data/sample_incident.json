@@ -1,0 +1,52 @@
+{
+  "incident_metadata": {
+    "case_number": "AEGIS-2026-STK-0924",
+    "title": "Cross-Platform Targeted Stalking & Nocturnal Intimidation Incident",
+    "victim_alias": "Victim-JaneDoe",
+    "suspect_alias": "ObsessiveGhost_99 / Alex K.",
+    "platform": "SMS / Instagram DM / Anonymous SMTP"
+  },
+  "messages": [
+    {
+      "sender": "ObsessiveGhost_99",
+      "timestamp": "2026-10-12T14:20:00Z",
+      "content": "Hey Jane, why did you block my other account? We really need to talk. Unblock me now."
+    },
+    {
+      "sender": "ObsessiveGhost_99",
+      "timestamp": "2026-10-12T19:45:00Z",
+      "content": "Stop ignoring me! I made this new account just to reach you. You can't just pretend I don't exist."
+    },
+    {
+      "sender": "ObsessiveGhost_99",
+      "timestamp": "2026-10-12T23:35:00Z",
+      "content": "I saw you at your gym today wearing that blue jacket. Who was that guy you were laughing with outside?"
+    },
+    {
+      "sender": "ObsessiveGhost_99",
+      "timestamp": "2026-10-13T01:15:00Z",
+      "content": "I see your apartment bedroom light is still on. You can't hide from me. Why won't you answer my calls?"
+    },
+    {
+      "sender": "ObsessiveGhost_99",
+      "timestamp": "2026-10-13T01:18:00Z",
+      "content": "PICK UP THE PHONE RIGHT NOW OR YOU WILL REGRET THIS!"
+    },
+    {
+      "sender": "ObsessiveGhost_99",
+      "timestamp": "2026-10-13T02:40:00Z",
+      "content": "You think moving helped? I know where you live: 742 Evergreen Terrace, Apt 4B. I am parked outside your house right now watching your window."
+    },
+    {
+      "sender": "ObsessiveGhost_99",
+      "timestamp": "2026-10-13T02:42:00Z",
+      "content": "I have your phone number +1-555-019-2834 and your work email jane.doe@techcorp.io. Tomorrow morning I will email your manager and post on twitter to ruin your career."
+    },
+    {
+      "sender": "ObsessiveGhost_99",
+      "timestamp": "2026-10-13T02:45:00Z",
+      "content": "I will destroy you and leak your private photos unless you reply in 10 minutes. This is your last chance. Watch your back."
+    }
+  ],
+  "raw_email_headers": "Delivered-To: jane.doe@corporate-secure.org\nReceived: by 2002:a05:6512:128b:b0:534:9c21:4a38 with SMTP id x11csp1284562lfr;\n        Tue, 13 Oct 2026 02:46:12 -0700 (PDT)\nX-Google-Smtp-Source: AGHT+IH8k2s4H9L0v...\nX-Received: by 2002:a17:907:9512:b0:ad1:e72b:981 with SMTP id y18mr1598284ejc.2.1760435172401;\n        Tue, 13 Oct 2026 02:46:12 -0700 (PDT)\nARC-Seal: i=1; a=rsa-sha256; t=1760435172; cv=none;\nReceived: from relay02.anonymizer-proxy.net (relay02.anonymizer-proxy.net. [198.51.100.88])\n        by mx.google.com with ESMTPS id o12-20020a170907094c00b00a0b6d21e869si4758920ejc.121.2026.10.13.02.46.11\n        for <jane.doe@corporate-secure.org>\n        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);\n        Tue, 13 Oct 2026 02:46:12 -0700 (PDT)\nReceived-SPF: softfail (google.com: domain of transitioning notification@anonymous-mail.cc does not designate 198.51.100.88 as permitted sender) client-ip=198.51.100.88;\nAuthentication-Results: mx.google.com;\n       spf=softfail (google.com: domain of transitioning notification@anonymous-mail.cc does not designate 198.51.100.88 as permitted sender) smtp.mailfrom=notification@anonymous-mail.cc;\n       dkim=fail header.i=@anonymous-mail.cc header.s=default header.b=X9c8K...\nReceived: from internal-vpn-gateway.lan (internal-vpn-gateway.lan [10.240.12.8])\n        by relay02.anonymizer-proxy.net with ESMTP id 89F1A400E2\n        for <jane.doe@corporate-secure.org>; Tue, 13 Oct 2026 09:46:08 +0000\nReceived: from client-origin-dhcp.res.ispnet.com (client-origin-dhcp.res.ispnet.com [203.0.113.194])\n        by internal-vpn-gateway.lan (Postfix) with ESMTPA id 4Z9M0191\n        for <jane.doe@corporate-secure.org>; Tue, 13 Oct 2026 09:45:55 +0000\nReceived: from localhost (localhost [127.0.0.1])\n        by workstation.local (Postfix) with ESMTP id 019FA821\n        for <jane.doe@corporate-secure.org>; Tue, 13 Oct 2026 05:45:50 -0400\nMessage-ID: <20261013094550.019FA821@workstation.local>\nDate: Tue, 13 Oct 2026 05:45:50 -0400\nFrom: \"Account Alert Service\" <notification@anonymous-mail.cc>\nTo: <jane.doe@corporate-secure.org>\nSubject: FINAL WARNING: Respond to my messages immediately or face public exposure\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) Thunderbird/115.8.0\nX-Originating-IP: [203.0.113.194]\nX-Mailer: StalkerScript-AutoSender v2.1\nContent-Type: text/plain; charset=UTF-8"
+}
