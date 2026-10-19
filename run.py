@@ -5,9 +5,16 @@ import sys
 import time
 
 
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
+
 def run_backend(port: int = 8000):
     print(f"[*] Starting AegisTrace FastAPI backend on http://127.0.0.1:{port}...")
-    cmd = [sys.executable, "-m", "uvicorn", "backend.app.main:app", "--host", "127.0.0.1", "--port", str(port), "--reload"]
+    cmd = [sys.executable, "-m", "uvicorn", "backend.app.main:app", "--host", "127.0.0.1", "--port", str(port), "--reload", "--reload-dir", "backend"]
     return subprocess.Popen(cmd)
 
 
@@ -36,7 +43,7 @@ def main():
             proc.wait()
         else:
             print("=================================================================")
-            print("  🛡️  AEGISTRACE: CYBERSTALKING DETECTION & FORENSICS PLATFORM  ")
+            print("  [+]  AEGISTRACE: CYBERSTALKING DETECTION & FORENSICS PLATFORM  ")
             print("=================================================================")
             b_proc = run_backend(args.backend_port)
             processes.append(b_proc)

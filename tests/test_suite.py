@@ -215,8 +215,10 @@ class TestFastAPIIntegration:
         assert len(data["sha256_hash"]) == 64
 
     def test_incident_analyze_persist_and_retrieve(self, client, sample_data):
+        import uuid
+        test_case_num = f"AEGIS-TEST-{uuid.uuid4().hex[:8]}"
         payload = {
-            "case_number": "AEGIS-TEST-FULL-01",
+            "case_number": test_case_num,
             "title": sample_data["incident_metadata"]["title"],
             "victim_alias": sample_data["incident_metadata"]["victim_alias"],
             "suspect_alias": sample_data["incident_metadata"]["suspect_alias"],
@@ -236,7 +238,7 @@ class TestFastAPIIntegration:
         r_get = client.get(f"/api/incidents/{inc_id}")
         assert r_get.status_code == 200
         data_get = r_get.json()
-        assert data_get["case_number"] == "AEGIS-TEST-FULL-01"
+        assert data_get["case_number"] == test_case_num
         assert len(data_get["messages"]) == len(sample_data["messages"])
         assert data_get["forensic_trace"]["originating_public_ip"] == "203.0.113.194"
 

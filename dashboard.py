@@ -232,14 +232,30 @@ with st.sidebar:
     platform = st.text_input("Vectors / Platform", value=st.session_state.case_metadata.get("platform", "SMS / Direct Message / SMTP"))
 
     st.markdown("---")
-    if st.button("🔄 Reload Realistic Incident Scenario", use_container_width=True):
-        sample = get_sample_data()
-        st.session_state.messages_input = sample["messages"]
-        st.session_state.sample_headers = sample["raw_email_headers"]
-        st.session_state.case_metadata = sample["incident_metadata"]
-        st.session_state.analysis_results = None
-        st.session_state.forensic_trace_results = None
-        st.rerun()
+    col_sb1, col_sb2 = st.columns(2)
+    with col_sb1:
+        if st.button("🔄 Sample Data", use_container_width=True, help="Load realistic demonstration case scenario"):
+            sample = get_sample_data()
+            st.session_state.messages_input = sample["messages"]
+            st.session_state.sample_headers = sample["raw_email_headers"]
+            st.session_state.case_metadata = sample["incident_metadata"]
+            st.session_state.analysis_results = None
+            st.session_state.forensic_trace_results = None
+            st.rerun()
+    with col_sb2:
+        if st.button("🆕 Blank Case", use_container_width=True, help="Wipe all data to start a live custom investigation"):
+            st.session_state.messages_input = []
+            st.session_state.sample_headers = ""
+            st.session_state.case_metadata = {
+                "case_number": "AEGIS-LIVE-DEMO",
+                "title": "Live Faculty Incident Examination",
+                "victim_alias": "Victim-Live",
+                "suspect_alias": "Suspect-Unknown",
+                "platform": "Multi-Platform Direct Messages"
+            }
+            st.session_state.analysis_results = None
+            st.session_state.forensic_trace_results = None
+            st.rerun()
 
     st.markdown("---")
     st.markdown(
@@ -269,19 +285,78 @@ tab_analyze, tab_headers, tab_benchmark = st.tabs([
 # =============================================================================
 with tab_analyze:
     st.markdown("### Cyberstalking Incident Evaluation & Temporal Escalation")
-    st.caption("Upload or edit multi-message communications to detect persistent pursuit, surveillance, doxxing, threats, and nocturnal velocity.")
+    st.caption("Upload your own custom evidence dataset, paste/type records live, or analyze persistent pursuit, surveillance, doxxing, and nocturnal velocity.")
 
     col_input, col_meta = st.columns([3, 1])
 
     with col_input:
-        st.markdown("##### Ingested Message Stream")
+        st.markdown("##### 📂 Ingest Custom Evidence or Edit Live Stream")
+
+        up_col1, up_col2 = st.columns([2, 1])
+        with up_col1:
+            uploaded_file = st.file_uploader(
+                "Upload Custom Evidence (CSV or JSON)",
+                type=["csv", "json"],
+                help="Upload a CSV with columns (sender, timestamp, content) or an AegisTrace incident JSON",
+                key="evidence_uploader"
+            )
+        with up_col2:
+            template_csv = "sender,timestamp,content\nSuspect_Alpha,2026-10-19T23:15:00Z,Why did you block me? Answer now.\nSuspect_Alpha,2026-10-20T01:30:00Z,I saw you leaving your building today.\nSuspect_Alpha,2026-10-20T02:00:00Z,I know where you live. Reply or I will leak your photos.\n"
+            st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)
+            st.download_button(
+                "📥 Download CSV Template",
+                data=template_csv,
+                file_name="evidence_template.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
+
+        if uploaded_file is not None:
+            try:
+                if uploaded_file.name.endswith(".csv"):
+                    df_up = pd.read_csv(uploaded_file)
+                    df_up.columns = [c.lower().strip() for c in df_up.columns]
+                    if "content" in df_up.columns:
+                        if "sender" not in df_up.columns:
+                            df_up["sender"] = "Suspect"
+                        if "timestamp" not in df_up.columns:
+                            df_up["timestamp"] = datetime.now(timezone.utc).isoformat()
+                        st.session_state.messages_input = df_up[["sender", "timestamp", "content"]].to_dict(orient="records")
+                        st.session_state.analysis_results = None
+                        st.success(f"✅ Ingested {len(df_up)} records from custom CSV file!")
+                    else:
+                        st.error("Uploaded CSV must contain at least a 'content' column.")
+                elif uploaded_file.name.endswith(".json"):
+                    c_json = json.load(uploaded_file)
+                    if isinstance(c_json, list):
+                        st.session_state.messages_input = c_json
+                    elif isinstance(c_json, dict) and "messages" in c_json:
+                        st.session_state.messages_input = c_json["messages"]
+                        if "incident_metadata" in c_json:
+                            st.session_state.case_metadata = c_json["incident_metadata"]
+                        if "raw_email_headers" in c_json:
+                            st.session_state.sample_headers = c_json["raw_email_headers"]
+                    st.session_state.analysis_results = None
+                    st.success("✅ Ingested custom evidence JSON dataset!")
+            except Exception as ex:
+                st.error(f"Error parsing uploaded file: {ex}")
+
         # Format messages into editable DataFrame
-        df_msgs = pd.DataFrame(st.session_state.messages_input)
+        if st.session_state.messages_input:
+            df_msgs = pd.DataFrame(st.session_state.messages_input)
+            for expected_col in ["sender", "timestamp", "content"]:
+                if expected_col not in df_msgs.columns:
+                    df_msgs[expected_col] = ""
+            df_msgs = df_msgs[["sender", "timestamp", "content"]]
+        else:
+            df_msgs = pd.DataFrame(columns=["sender", "timestamp", "content"])
+
+        st.caption("💡 *Edit text directly in cells below, or click the **'+'** icon at the bottom of the table to add new messages live during your demo.*")
         edited_df = st.data_editor(
             df_msgs,
             column_config={
                 "sender": st.column_config.TextColumn("Sender Handle", width="medium"),
-                "timestamp": st.column_config.TextColumn("Timestamp (UTC)", width="medium"),
+                "timestamp": st.column_config.TextColumn("Timestamp (UTC / ISO)", width="medium"),
                 "content": st.column_config.TextColumn("Message Content", width="large")
             },
             num_rows="dynamic",
@@ -291,8 +366,14 @@ with tab_analyze:
 
     with col_meta:
         st.markdown("##### Quick Actions")
-        st.write(f"**Total Messages:** {len(edited_df)}")
+        msg_count = len(edited_df) if edited_df is not None else 0
+        st.write(f"**Total Ingested Messages:** {msg_count}")
         run_analysis = st.button("⚡ Run Threat & Cadence Analysis", type="primary", use_container_width=True)
+
+        if st.button("🗑️ Clear Message Table", use_container_width=True):
+            st.session_state.messages_input = []
+            st.session_state.analysis_results = None
+            st.rerun()
 
         st.markdown("---")
         st.markdown(
@@ -309,8 +390,11 @@ with tab_analyze:
 
     # Perform Analysis
     if run_analysis or (st.session_state.analysis_results is None and len(edited_df) > 0):
-        messages_list = edited_df.to_dict(orient="records")
-        st.session_state.messages_input = messages_list
+        messages_list = edited_df.to_dict(orient="records") if edited_df is not None else []
+        if len(messages_list) == 0:
+            st.warning("⚠️ No messages to analyze. Please add rows or upload an evidence file.")
+        else:
+            st.session_state.messages_input = messages_list
 
         # Execute Core Analysis (Direct Core or API)
         with st.spinner("Processing lexical heuristics, temporal cadence, and cryptographic evidence hashing..."):
@@ -544,13 +628,29 @@ with tab_headers:
     with col_h_actions:
         st.markdown("##### Header Diagnostics")
         btn_trace = st.button("🔎 Trace Server Hops & Public IP", type="primary", use_container_width=True)
-        if st.button("📋 Load Sample Spoofed Stalker Header", use_container_width=True):
+        if st.button("📋 Load Sample Header", use_container_width=True):
             sample = get_sample_data()
             st.session_state.sample_headers = sample["raw_email_headers"]
+            st.session_state.forensic_trace_results = None
             st.rerun()
 
+        if st.button("🗑️ Clear Headers", use_container_width=True):
+            st.session_state.sample_headers = ""
+            st.session_state.forensic_trace_results = None
+            st.rerun()
+
+        up_hdr = st.file_uploader("📂 Ingest Header File (.eml / .txt)", type=["eml", "txt"], key="hdr_uploader")
+        if up_hdr is not None:
+            try:
+                hdr_bytes = up_hdr.read()
+                st.session_state.sample_headers = hdr_bytes.decode("utf-8", errors="replace")
+                st.session_state.forensic_trace_results = None
+                st.success("✅ Header file loaded!")
+            except Exception as ex:
+                st.error(f"Error loading header file: {ex}")
+
         st.markdown(
-            "<div style='font-size:0.78rem; color:#94a3b8; margin-top:12px;'>"
+            "<div style='font-size:0.78rem; color:#94a3b8; margin-top:8px;'>"
             "• Chronological hop unwinding<br/>"
             "• RFC 1918 Private IP filtering<br/>"
             "• SPF / DKIM verification<br/>"

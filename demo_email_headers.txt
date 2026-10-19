@@ -1,0 +1,34 @@
+Delivered-To: jane.doe@corporate-secure.org
+Received: by 2002:a05:6512:128b:b0:534:9c21:4a38 with SMTP id x11csp1284562lfr;
+        Tue, 13 Oct 2026 02:46:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH8k2s4H9L0v...
+X-Received: by 2002:a17:907:9512:b0:ad1:e72b:981 with SMTP id y18mr1598284ejc.2.1760435172401;
+        Tue, 13 Oct 2026 02:46:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1760435172; cv=none;
+Received: from relay02.anonymizer-proxy.net (relay02.anonymizer-proxy.net. [198.51.100.88])
+        by mx.google.com with ESMTPS id o12-20020a170907094c00b00a0b6d21e869si4758920ejc.121.2026.10.13.02.46.11
+        for <jane.doe@corporate-secure.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Oct 2026 02:46:12 -0700 (PDT)
+Received-SPF: softfail (google.com: domain of transitioning notification@anonymous-mail.cc does not designate 198.51.100.88 as permitted sender) client-ip=198.51.100.88;
+Authentication-Results: mx.google.com;
+       spf=softfail (google.com: domain of transitioning notification@anonymous-mail.cc does not designate 198.51.100.88 as permitted sender) smtp.mailfrom=notification@anonymous-mail.cc;
+       dkim=fail header.i=@anonymous-mail.cc header.s=default header.b=X9c8K...
+Received: from internal-vpn-gateway.lan (internal-vpn-gateway.lan [10.240.12.8])
+        by relay02.anonymizer-proxy.net with ESMTP id 89F1A400E2
+        for <jane.doe@corporate-secure.org>; Tue, 13 Oct 2026 09:46:08 +0000
+Received: from client-origin-dhcp.res.ispnet.com (client-origin-dhcp.res.ispnet.com [203.0.113.194])
+        by internal-vpn-gateway.lan (Postfix) with ESMTPA id 4Z9M0191
+        for <jane.doe@corporate-secure.org>; Tue, 13 Oct 2026 09:45:55 +0000
+Received: from localhost (localhost [127.0.0.1])
+        by workstation.local (Postfix) with ESMTP id 019FA821
+        for <jane.doe@corporate-secure.org>; Tue, 13 Oct 2026 05:45:50 -0400
+Message-ID: <20261013094550.019FA821@workstation.local>
+Date: Tue, 13 Oct 2026 05:45:50 -0400
+From: "Account Alert Service" <notification@anonymous-mail.cc>
+To: <jane.doe@corporate-secure.org>
+Subject: FINAL WARNING: Respond to my messages immediately or face public exposure
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) Thunderbird/115.8.0
+X-Originating-IP: [203.0.113.194]
+X-Mailer: StalkerScript-AutoSender v2.1
+Content-Type: text/plain; charset=UTF-8
